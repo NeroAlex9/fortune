@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'; // Импорт React и хуков useEffect и useRef из библиотеки 'react'
-import Phaser from 'phaser'; // Импорт библиотеки Phaser для создания игр
+import React, { useEffect, useRef } from 'react'; 
+import Phaser from 'phaser'; 
 
 // КЛАСС СЦЕНЫ ВРАЩЕНИЯ КОЛЕСА
 class WheelScene extends Phaser.Scene {
@@ -9,30 +9,33 @@ class WheelScene extends Phaser.Scene {
 
     preload() {
         // Предварительная загрузка графических ресурсов
-        this.load.image('wheel', '/assets/wheel.png'); // Загрузка изображения колеса с ключом 'wheel'
-        this.load.image('pin', '/assets/pin.png');       // Загрузка изображения булавки с ключом 'pin'
-        this.load.image('bg', '/assets/bg.jpg');         // Загрузка фонового изображения с ключом 'bg'
-        this.load.image('topText', '/assets/textTop.png');  
-        this.load.image('bottomText', '/assets/textBottom.png');       
+        this.load.image('wheel', '/assets/wheel.png');         
+        this.load.image('pin', '/assets/pin.png');             
+        this.load.image('bg', '/assets/bg.jpg');               
+        this.load.image('topText', '/assets/textTop.png');     
+        this.load.image('bottomText', '/assets/textBottom.png'); 
+        this.load.image('winner', '/assets/winner.png');       
     }
 
     create() {
         // Инициализация переменных
         this.canSpin = true; // Флаг, указывающий, можно ли вращать колесо
         this.slicePrizes = [ // Массив призов, разделенных на секции колеса с их весами для вероятности выпадения
-            { name: "A KEY!!!", weight: 10 },       // Приз "A KEY!!!" с весом 10%
-            { name: "50 STARS", weight: 20 },      // Приз "50 STARS" с весом 20%
-            { name: "500 STARS", weight: 30 },     // Приз "500 STARS" с весом 30%
-            { name: "BAD LUCK!!!", weight: 10 },   // Приз "BAD LUCK!!!" с весом 10%
-            { name: "200 STARS", weight: 15 },     // Приз "200 STARS" с весом 15%
-            { name: "100 STARS", weight: 5 },      // Приз "100 STARS" с весом 5%
-            { name: "150 STARS", weight: 5 },      // Приз "150 STARS" с весом 5%
-            { name: "BAD LUCK!!!", weight: 5 }     // Приз "BAD LUCK!!!" с весом 5%
+            { name: "Скидка 10%", weight: 10 },       
+            { name: "Промокод на скидку 30%", weight: 20 },      
+            { name: "Без выигрыша", weight: 30 }, 
+            { name: "Скидка 20%", weight: 10 },   
+            { name: "Бесплатное капучино", weight: 15 },    
+            { name: "повезет в другой раз", weight: 5 },      
+            { name: "Бесплатное американо", weight: 5 },      
+            { name: "Бесплатный РАФ", weight: 5 }     
         ];
+
         // Вычисление общей суммы весов для выбора приза
         this.totalWeight = this.slicePrizes.reduce((acc, prize) => acc + prize.weight, 0);
         this.cumulativeWeights = []; // Массив накопительных весов для определения границ вероятностей
         let cumulative = 0; // Переменная для накопления весов
+
         // Заполнение массива накопительных весов
         this.slicePrizes.forEach(prize => {
             cumulative += prize.weight; // Добавление веса текущего приза к накопленной сумме
@@ -41,28 +44,24 @@ class WheelScene extends Phaser.Scene {
         this.slices = this.slicePrizes.length; // Количество секций на колесе
         this.anglePerSlice = 360 / this.slices; // Угол, соответствующий одной секции колеса
 
-        
-
-        // Добавление фонового изображения в центр холста
-        this.bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg');
-
-        this.topText = this.add.sprite(this.cameras.main.width / 2, 90, 'topText');
-        this.bottomText = this.add.sprite(this.cameras.main.width / 2, 600, 'bottomText');
-
-        // Добавление колеса в центр холста
-        this.wheel = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'wheel');
+       
+        this.bg = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg');
+        this.topText = this.add.image(this.cameras.main.width / 2, 90, 'topText');
+        this.bottomText = this.add.image(this.cameras.main.width / 2, 600, 'bottomText');
+        this.wheel = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'wheel');
         this.wheel.setOrigin(0.5); // Установка точки привязки колеса в центр
-
-        // Добавление булавки в центр холста
-        const pin = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'pin');
+        const pin = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'pin');
         pin.setOrigin(0.5); // Установка точки привязки булавки в центр
 
-        // Добавление текста для отображения выигрыша
-        this.prizeText = this.add.text(this.cameras.main.width / 2, 650, '', { // Создание текстового объекта
-            font: '24px Arial', // Установка шрифта и размера
-            fill: '#ffffff',     // Установка цвета текста (белый)
-            align: 'center'      // Выравнивание текста по центру
+        this.winner = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'winner');
+        this.winner.setVisible(false); 
+
+        this.prizeText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, '', { // Создание текстового объекта
+            font: '24px Arial', 
+            fill: '#ffffff',     
+            align: 'center'      
         }).setOrigin(0.5); // Установка точки привязки текста в центр
+        this.prizeText.setVisible(false); // Скрытие текста до момента выигрыша
 
         // Обработчик клика для вращения колеса
         this.input.once('pointerdown', this.spinWheel, this); // Добавление однократного обработчика события 'pointerdown' для запуска функции spinWheel
@@ -73,6 +72,7 @@ class WheelScene extends Phaser.Scene {
         if (this.canSpin) { // Проверка, можно ли вращать колесо
             this.canSpin = false; // Блокировка вращения до завершения текущего
             this.prizeText.setText(''); // Очистка текста выигрыша
+            this.winner.setVisible(false); 
 
             // Выбор приза на основе весов
             const rand = Phaser.Math.Between(1, this.totalWeight); // Генерация случайного числа от 1 до общей суммы весов
@@ -105,7 +105,9 @@ class WheelScene extends Phaser.Scene {
     displayPrize(selectedPrizeIndex) {
         this.canSpin = true; // Разблокировка возможности вращения колеса
         const prize = this.slicePrizes[selectedPrizeIndex].name; // Получение названия выигранного приза по индексу
-        this.prizeText.setText(`Вы выиграли: ${prize}`); // Установка текста выигрыша
+        this.winner.setVisible(true); // Отображение изображения 'winner'
+        this.prizeText.setText(prize); // Установка текста выигрыша
+        this.prizeText.setVisible(true); // Отображение текста
 
         // Повторное добавление обработчика клика для следующего вращения
         this.input.once('pointerdown', this.spinWheel, this); // Добавление однократного обработчика события 'pointerdown' для запуска функции spinWheel
@@ -117,13 +119,13 @@ const Game = () => {
     const gameRef = useRef(null); // Создание рефа для контейнера Phaser
     const phaserGame = useRef(null); // Создание рефа для экземпляра игры Phaser
 
-    useEffect(() => { // Хук useEffect для инициализации и очистки Phaser игры
-        const config = { // Конфигурация игры Phaser
+    useEffect(() => { 
+        const config = { 
             type: Phaser.AUTO, // Автоматический выбор рендерера (WebGL или Canvas)
             parent: gameRef.current, // Контейнер для игры - текущий реф
-            width: 600, // Ширина игрового холста
-            height: 700, // Высота игрового холста
-            backgroundColor: '#880044', // Цвет фона холста
+            width: 600, 
+            height: 700, 
+            backgroundColor: '#880044', 
             scene: [WheelScene], // Массив сцен, используемых в игре (в данном случае только WheelScene)
             physics: { // Настройки физического движка
                 default: 'arcade', // Использование 'arcade' физики
@@ -150,4 +152,4 @@ const Game = () => {
     );
 };
 
-export default Game; // Экспорт компонента Game по умолчанию
+export default Game; 
