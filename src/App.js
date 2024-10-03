@@ -1,7 +1,7 @@
-import Game from "./pages/Game";
+import Game from "./pages/Game/Game";
 import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 
 
 function App() {
