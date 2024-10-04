@@ -17,6 +17,7 @@ class WheelScene extends Phaser.Scene {
         this.load.image('winner', '/assets/winner.png');       
     }
 
+
     create() {
         // Инициализация переменных
         this.canSpin = true; // Флаг, указывающий, можно ли вращать колесо
@@ -30,6 +31,8 @@ class WheelScene extends Phaser.Scene {
             { name: "Бесплатное американо", weight: 5 },      
             { name: "Бесплатный РАФ", weight: 5 }     
         ];
+
+        
 
         // Вычисление общей суммы весов для выбора приза
         this.totalWeight = this.slicePrizes.reduce((acc, prize) => acc + prize.weight, 0);
