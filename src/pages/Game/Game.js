@@ -94,14 +94,7 @@ const Game = () => {
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
             backgroundColor: '#d13b3c',
-            scene: [WheelScene],
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    gravity: { y: 0 },
-                    debug: false
-                }
-            }
+            scene: [WheelScene]
         };
 
         phaserGame.current = new Phaser.Game(config);
