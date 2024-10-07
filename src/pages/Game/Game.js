@@ -11,7 +11,7 @@ class WheelScene extends Phaser.Scene {
         // Предварительная загрузка графических ресурсов
         this.load.image('wheel', '/assets/wheel.png');         
         this.load.image('pin', '/assets/pin.png');             
-        this.load.image('bg', '/assets/bg.jpg');               
+        // this.load.image('bg', '/assets/bg.jpg');               
         this.load.image('topText', '/assets/textTop.png');     
         this.load.image('bottomText', '/assets/textBottom.png'); 
         this.load.image('winner', '/assets/winner.png');       
@@ -39,8 +39,8 @@ class WheelScene extends Phaser.Scene {
             this.cumulativeWeights.push(cumulative); // Добавление накопленной суммы в массив
         });
 
-        // Добавление фонового изображения в центр холста
-        this.bg = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg');
+        // // Добавление фонового изображения в центр холста
+        // this.bg = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg');
 
         // Добавление верхнего текста
         this.topText = this.add.image(this.cameras.main.width / 2, 90, 'topText');
@@ -134,7 +134,11 @@ const Game = () => {
             parent: gameRef.current, // Контейнер для игры - текущий реф
             width: 450, // Фиксированная ширина игры
             height: 700, // Фиксированная высота игры
-            backgroundColor: '#880044', 
+            scale: {
+                mode: Phaser.Scale.FIT,  // Автоматическое масштабирование
+                autoCenter: Phaser.Scale.CENTER_BOTH,  // Центрирование игры
+            },
+            backgroundColor: '#d13b3c', 
             scene: [WheelScene], // Массив сцен, используемых в игре (в данном случае только WheelScene)
             physics: { // Настройки физического движка
                 default: 'arcade', // Использование 'arcade' физики
@@ -160,7 +164,6 @@ const Game = () => {
         <div 
             id="phaser-container" 
             ref={gameRef} 
-            style={{ width: '450px', height: '700px', overflow: 'hidden' }} // Фиксированные размеры для адаптивности
         ></div>
     );
 };
