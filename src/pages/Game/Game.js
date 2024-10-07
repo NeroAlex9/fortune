@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
-
 // Класс сцены вращения колеса
 class WheelScene extends Phaser.Scene {
     constructor() {
@@ -89,11 +88,12 @@ const Game = () => {
             parent: gameRef.current,
             width: 450,
             height: 700,
+            transparent: true,
             scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            backgroundColor: '#d13b3c',
+            
             scene: [WheelScene]
         };
 
