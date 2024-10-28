@@ -7,6 +7,9 @@ function Home(props) {
             <NavLink to={'/game'}>
                 <button>START GAME</button>
             </NavLink>
+            <NavLink to={'/settings'}>
+                <button>Settings</button>
+            </NavLink>
 
         </div>
     );
